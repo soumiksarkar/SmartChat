@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script>
+      $(function(){
+        var socket = io('http://localhost:3000');
+        $("#addClass").click(function () {
+          $("#sidebar_secondary").addClass("popup-box-on");
+        });
+
+        $("#removeClass").click(function () {
+          $("#sidebar_secondary").removeClass("popup-box-on");
+        });
+        $("#sendData").click(function () {
+          alert(socket);
+          socket.emit('node1', $('#submit_message').val());
+          $('#submit_message').val('');
+          return false;
+        });
+
+
+  })
+  </script>
+  </head>
+  <body>
+    <div class="container text-center">
+      <div class="row">
+
+          <a href="#" class="open-btn" id="addClass"><i aria-hidden="true"></i> Click Here</a>
+
+  	</div>
+  </div>
+
+
+  <aside id="sidebar_secondary" >
+
+  <div class="popup-head">
+      			<div class="popup-head-left pull-left"><a Design and Developmenta title="Gurdeep Osahan (Web Designer)" target="_blank" href="https://web.facebook.com/iamgurdeeposahan">
+  <img class="md-user-image" alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="https://www.zikelcosmetics.com/wp-content/uploads/2016/07/17083-Female-Avatar-ORG.jpg" title="Gurdeep Osahan (Web Designer)" alt="Gurdeep Osahan (Web Designer)">
+  <h1>Deeva</h1><small><br> <span class="glyphicon" aria-hidden="true"></span> online</small></a></div>
+  					  <div class="popup-head-right pull-right">
+  						<button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+              </div>
+  			  </div>
+
+  <div id="chat" class="chat_box_wrapper chat_box_small chat_box_active" style="opacity: 1; display: block; transform: translateX(0px);">
+
+  </div>
+  <div class="chat_submit_box">
+      <div class="uk-input-group">
+          <div class="gurdeep-chat-box">
+          <span style="vertical-align: sub;" class="uk-input-group-addon">
+          <a href="#"><i class="fa fa-smile-o"></i></a>
+          </span>
+          <input type="text" placeholder="Type a message" id="submit_message" name="submit_message" class="md-input">
+          <span style="vertical-align: sub;" class="uk-input-group-addon">
+          <a href="#"><i id="sendData" class="fa fa-send"></i></a>
+          </span>
+          </div>
+
+      <span class="uk-input-group-addon">
+      <a href="#"><i class="glyphicon glyphicon-send"></i></a>
+      </span>
+      </div>
+  </div>
+</aside>
+
+  </body>
+</html>
