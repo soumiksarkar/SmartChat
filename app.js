@@ -1,49 +1,120 @@
+var fs = require('fs');
+var http = require('http');
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
-var index = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
+var SockJS  = require('sockjs');
+var dataFile = './data.txt';
+var datas = [];
+var lastDatas = '[]';
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+// Set static dir
+app.use('/assets', express.static('bower_components'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+// Check if data file exists, if not exists then create the file
+if(!fs.existsSync(dataFile)) {
+    fs.writeFileSync(dataFile, '[]');
+} else {
+    lastDatas = fs.readFileSync(dataFile, 'utf8');
+    datas = JSON.parse(lastDatas);
+}
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+// Watch the datas array, on change, save to db
+setInterval(function(){
+    if(JSON.stringify(datas) !== lastDatas) {
+        var stringified = JSON.stringify(datas);
+        fs.writeFile(dataFile, stringified, function(err){
+            if(err) throw err;
+            console.log(dataFile + ' updated');
+            lastDatas = stringified;
+        });
+    }
+}, 300);
+
+
+// When the user goes to the / route, send view
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/views/index.html');
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// Setup SockJS server
+var sockjs = SockJS.createServer({sockjs_url: "http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"});
+var clients = [];
+sockjs.on('connection', function(conn) {
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // add connection to clients array
+    clients.push(conn);
+    console.log('connection opened', clients.length);
+
+    // send all data to the client
+    datas.forEach(function(data){
+        conn.write(JSON.stringify(data));
+    });
+
+    conn.on('close', function(){
+        // remove the connection from the clients array
+        clients.splice(clients.indexOf(conn), 1);
+        console.log('connection closed', clients.length);
+    });
+
+    conn.on('data', function(data){
+        data = JSON.parse(data);
+        var newMessage = {
+            message: data.message,
+            username: data.username,
+            timestamp: Date.now()
+        };
+
+        // append new data on datas array
+        datas.push(newMessage);
+
+        // send new data to all clients
+        clients.forEach(function(conn){
+            conn.write(JSON.stringify(newMessage));
+			const apiaiApp = require('apiai')("7f15354fd8784fefa82137532014d187");
+			
+			  let sender = conn.id;
+			  let text = data.message;
+			 console.log("sender = " + sender);
+			 console.log("text = " + text);
+			  let apiai = apiaiApp.textRequest(text, {
+				sessionId: '1234' // use any arbitrary id
+			  });
+
+			  apiai.on('response', (response) => {
+			  
+				console.log("response = " + response);
+			  let aiText = response.result.fulfillment.speech;
+              console.log(aiText.toString());
+				var newMessage = {
+					message: aiText,
+					username: 'PwC',
+					timestamp: Date.now()
+				};	
+              datas.push(newMessage);				
+              conn.write(JSON.stringify(newMessage));
+
+			  });
+
+			  apiai.on('error', (error) => {
+				console.log(error);
+			  });
+
+			  apiai.end();			
+			
+        });
+    });
 });
 
+// Create the NodeJS HTTP Server with express app
+var server = http.createServer(app);
 
-module.exports = app;
+// Install sockjs handlers on http server
+sockjs.installHandlers(server, {prefix:'/messages'});
+
+// Start the server
+server.listen(3000, function(){
+    console.log('Express serving on port 3000');
+});
+

@@ -1,79 +1,195 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-<!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./styles/style.css">
+</head>
+<body ng-controller="ListController">
+
+
+<div class="container text-center">
+    <div class="row">
+		
+        <a href="#" class="open-btn" id="addClass" ng-click="openChatWindow();"><i aria-hidden="true"></i> Click Here</a>
+    
+	</div>
+</div>
+
+
+<aside id="sidebar_secondary" class="tabbed_sidebar ng-scope chat_sidebar" ng-show="showHide">
+
+<div class="popup-head">
+    			<div class="popup-head-left pull-left"><a Design and Developmenta title="Gurdeep Osahan (Web Designer)" target="_blank" href="https://web.facebook.com/iamgurdeeposahan">
+<img class="md-user-image" alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="https://www.zikelcosmetics.com/wp-content/uploads/2016/07/17083-Female-Avatar-ORG.jpg" title="Gurdeep Osahan (Web Designer)" alt="Gurdeep Osahan (Web Designer)">
+<h1>Deeva</h1><small><br> <span class="glyphicon" aria-hidden="true"></span> online</small></a></div>
+					  <div class="popup-head-right pull-right">
+                      <!--button class="chat-header-button" type="button"><i class="glyphicon glyphicon-facetime-video"></i></button>
+						<button class="chat-header-button" type="button"><i class="glyphicon glyphicon-earphone"></i></button>
+                        <div class="btn-group gurdeepoushan">
+    								  <button class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
+									   <i class="glyphicon glyphicon-paperclip"></i> </button>
+									  <ul role="menu" class="dropdown-menu pull-right">
+										<li><a href="#"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Gallery</a></li>
+										<li><a href="#"><span class="glyphicon glyphicon-camera" aria-hidden="true"></span> Photo</a></li>
+										<li><a href="#"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> Video</a></li>
+										<li><a href="#"><span class="glyphicon glyphicon-headphones" aria-hidden="true"></span> Audio</a></li>
+                                        <li><a href="#"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Location</a></li>
+                                        <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Contact</a></li>
+									  </ul>
+						</div-->
+						
+						<button ng-click="closeChatWindow();" data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+                      </div>
+			  </div>
+
+                      <div id="chat" class="chat_box_wrapper chat_box_small chat_box_active" style="opacity: 1; display: block; transform: translateX(0px);">
+                        <div class="chat_box touchscroll chat_box_colors_a">
+                            <div class="chat_message_wrapper" ng-repeat="message in messages">
+                                <div class="chat_user_avatar">
+                                    <a href="https://web.facebook.com/iamgurdeeposahan" target="_blank" >
+                                    <img alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)"  src="https://www.zikelcosmetics.com/wp-content/uploads/2016/07/17083-Female-Avatar-ORG.jpg" class="md-user-image">
+                                    </a>
+                                </div>
+                                <ul class="chat_message">
+                                    <li>
+                                        <p> {{message.username}} </p>
+                                    </li>
+                                    <li>
+                                        <p> {{message.message}}<span class="chat_message_time">{{message.timestamp | amTimeAgo}}</span> </p>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+					<div class="chat_submit_box">
+					<form ng-controller="FormController" ng-submit="create()">
+						<div class="uk-input-group">
+							<div class="gurdeep-chat-box">
+							<span style="vertical-align: sub;" class="uk-input-group-addon">
+							<a href="#"><i class="fa fa-smile-o"></i></a>
+							</span>
+							<input type="text" placeholder="Type a message" id="submit_message" name="submit_message" class="md-input" ng-model="message" autofocus>
+							<span style="vertical-align: sub;" class="uk-input-group-addon">
+							<a href="#"><i class="fa fa-camera"></i></a>
+							</span>
+							</div>
+						
+						<span class="uk-input-group-addon">
+						<a href="#"><i class="glyphicon glyphicon-send"></i></a>
+						</span>
+						</div>
+						</form>
+					</div>
+        
+        </aside>
+
+
+
+
+
+
+
+
+    <!--br>
+    <div class="container">
+
+        <form ng-controller="FormController" ng-submit="create()">
+            {{username}} : 
+            <input type="text" ng-model="message" autofocus>
+            <button class="btn btn-primary">Send</button>
+        </form>
+
+        <br>
+
+        <ul class="list-unstyled" ng-controller="ListController">
+            <li ng-repeat="message in messages | reverse">
+                <span>{{message.username}} : </span>
+                <span>{{message.message}}</span>
+                <div class="text-muted">{{message.timestamp | amTimeAgo}}</div>
+            </li>
+        </ul>
+
+    </div-->
+
+    <script src="/assets/sockjs/sockjs.min.js"></script>
+    <script src="/assets/angular/angular.min.js"></script>
+    <script src="/assets/ng-sockjs/dist/ng-sockjs.min.js"></script>
+    <script src="/assets/moment/min/moment.min.js"></script>
+    <script src="/assets/angular-moment/angular-moment.min.js"></script>
+    <script src="/assets/chance/chance.js"></script>
     <script>
-      $(function(){
-        var socket = io('http://localhost:3000');
-        $("#addClass").click(function () {
-          $("#sidebar_secondary").addClass("popup-box-on");
+
+        var app = angular.module('app', ['angularMoment', 'ng.sockjs']);
+
+        // configure SockJS to connect to /messages url
+        app.value('ngSockUrl', '/messages');
+
+        // to display the latest messages first, we'll have to reverse it
+        app.filter('reverse', function() {
+            return function(items) {
+                return items.slice().reverse();
+            };
         });
 
-        $("#removeClass").click(function () {
-          $("#sidebar_secondary").removeClass("popup-box-on");
+        // ListController to control our list
+        app.controller('ListController', function($scope, socket) {
+		    $scope.showHide = false;
+            $scope.messages = [];
+            socket.onOpen(function(){
+
+                // set messages to empty array
+                $scope.messages = [];
+            });
+            socket.onMessage(function(data){
+
+                // on new message, push to messages array
+                $scope.messages.push(data);
+            });
+			
+			$scope.openChatWindow = function(){ 
+			  
+			  $scope.showHide = true;
+			};
+			
+			$scope.closeChatWindow = function(){ 
+			  
+			  $scope.showHide = false;
+			};			
         });
-        $("#sendData").click(function () {
-          alert(socket);
-          socket.emit('node1', $('#submit_message').val());
-          $('#submit_message').val('');
-          return false;
+
+
+        // FormController to control our form
+        app.controller('FormController', function($scope, $window, socket) {
+            $scope.message = '';
+
+            // get username from localStorage or else generate one for me
+            $scope.username = $window.localStorage.getItem('username') || chance.first();
+
+            // save the username into localStorage
+            $window.localStorage.setItem('username', $scope.username);
+
+            // create new message
+            $scope.create = function() {
+                var message = $scope.message.trim();
+
+                // if message is truthy
+                if(message) {
+
+                    // send the data through the socket
+                    socket.send({
+                        message: message,
+                        username: $scope.username
+                    });
+
+                    // set message to blank
+                    $scope.message = '';
+                }
+            }
         });
-
-
-  })
-  </script>
-  </head>
-  <body>
-    <div class="container text-center">
-      <div class="row">
-
-          <a href="#" class="open-btn" id="addClass"><i aria-hidden="true"></i> Click Here</a>
-
-  	</div>
-  </div>
-
-
-  <aside id="sidebar_secondary" >
-
-  <div class="popup-head">
-      			<div class="popup-head-left pull-left"><a Design and Developmenta title="Gurdeep Osahan (Web Designer)" target="_blank" href="https://web.facebook.com/iamgurdeeposahan">
-  <img class="md-user-image" alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="https://www.zikelcosmetics.com/wp-content/uploads/2016/07/17083-Female-Avatar-ORG.jpg" title="Gurdeep Osahan (Web Designer)" alt="Gurdeep Osahan (Web Designer)">
-  <h1>Deeva</h1><small><br> <span class="glyphicon" aria-hidden="true"></span> online</small></a></div>
-  					  <div class="popup-head-right pull-right">
-  						<button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
-              </div>
-  			  </div>
-
-  <div id="chat" class="chat_box_wrapper chat_box_small chat_box_active" style="opacity: 1; display: block; transform: translateX(0px);">
-
-  </div>
-  <div class="chat_submit_box">
-      <div class="uk-input-group">
-          <div class="gurdeep-chat-box">
-          <span style="vertical-align: sub;" class="uk-input-group-addon">
-          <a href="#"><i class="fa fa-smile-o"></i></a>
-          </span>
-          <input type="text" placeholder="Type a message" id="submit_message" name="submit_message" class="md-input">
-          <span style="vertical-align: sub;" class="uk-input-group-addon">
-          <a href="#"><i id="sendData" class="fa fa-send"></i></a>
-          </span>
-          </div>
-
-      <span class="uk-input-group-addon">
-      <a href="#"><i class="glyphicon glyphicon-send"></i></a>
-      </span>
-      </div>
-  </div>
-</aside>
-
-  </body>
+    </script>
+</body>
 </html>

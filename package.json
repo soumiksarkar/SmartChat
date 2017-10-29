@@ -1,18 +1,24 @@
 {
-  "name": "chat-bot-app",
+  "name": "angular-realtime-example",
   "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
+  "description": "",
+  "main": "ex1.js",
   "dependencies": {
-    "body-parser": "~1.17.1",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.3",
-    "ejs": "~2.5.6",
-    "express": "~4.15.2",
-    "morgan": "~1.8.1",
-    "serve-favicon": "~2.4.2",
-    "socket.io": "^2.0.4"
-  }
+    "apiai": "^4.0.3",
+    "body-parser": "^1.12.3",
+    "express": "^4.12.3",
+    "express-sse": "git://github.com/dpskvn/express-sse.git",
+    "path": "^0.12.7",
+    "sockjs": "^0.3.15"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.10.0",
+    "jshint-stylish": "^1.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
 }

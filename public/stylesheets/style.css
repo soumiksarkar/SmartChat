@@ -20,7 +20,7 @@ a:focus {
     font-family: oswald;
     font-size: 18px;
     margin: 2px 0 0 5px;
-
+   
 }
 .popup-head-left a small {
     display: table;
@@ -97,7 +97,7 @@ a:focus {
     padding: 0 6px;
 }
 .chat_box_wrapper.chat_box_small.chat_box_active {
-
+    
     height: 342px;
     overflow-y: scroll;
     width: 316px;
@@ -112,7 +112,7 @@ aside {
     background-repeat: repeat;
     border: 1px solid #304445;
     bottom: 0;
-    display: none!important;
+    /*display: none;*/
     height: 466px;
     position: fixed;
     right: 70px;
