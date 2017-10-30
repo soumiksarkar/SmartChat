@@ -1,1 +1,0 @@
-[{"message":"hi","username":"Phoebe","timestamp":1509255913169},{"message":"Hello. I am PwC Demo Bot, your personal assistant! I'm doing great! How are you doing today?","username":"PwC","timestamp":1509255915179}]
