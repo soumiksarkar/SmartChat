@@ -114,7 +114,7 @@ var server = http.createServer(app);
 sockjs.installHandlers(server, {prefix:'/messages'});
 
 // Start the server
-server.listen(3000, function(){
+server.listen(process.env.PORT || 3000, function(){
     console.log('Express serving on port 3000');
 });
 
