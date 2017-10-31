@@ -7,6 +7,7 @@ var SockJS  = require('sockjs');
 var dataFile = './data.txt';
 var datas = [];
 var lastDatas = '[]';
+var cornService  = require('./config/cronConfig');
 
 // Set static dir
 app.use('/assets', express.static('bower_components'));
@@ -73,7 +74,7 @@ sockjs.on('connection', function(conn) {
         clients.forEach(function(conn){
             conn.write(JSON.stringify(newMessage));
 			const apiaiApp = require('apiai')("7f15354fd8784fefa82137532014d187");
-			
+
 			  let sender = conn.id;
 			  let text = data.message;
 			 console.log("sender = " + sender);
@@ -83,7 +84,7 @@ sockjs.on('connection', function(conn) {
 			  });
 
 			  apiai.on('response', (response) => {
-			  
+
 				console.log("response = " + response);
 			  let aiText = response.result.fulfillment.speech;
               console.log(aiText.toString());
@@ -91,8 +92,8 @@ sockjs.on('connection', function(conn) {
 					message: aiText,
 					username: 'PwC',
 					timestamp: Date.now()
-				};	
-              datas.push(newMessage);				
+				};
+              datas.push(newMessage);
               conn.write(JSON.stringify(newMessage));
 
 			  });
@@ -101,8 +102,8 @@ sockjs.on('connection', function(conn) {
 				console.log(error);
 			  });
 
-			  apiai.end();			
-			
+			  apiai.end();
+
         });
     });
 });
@@ -117,4 +118,3 @@ sockjs.installHandlers(server, {prefix:'/messages'});
 server.listen(process.env.PORT || 3000, function(){
     console.log('Express serving on port 3000');
 });
-
