@@ -36,20 +36,6 @@ exports.first_job = {
         .catch(function (err) {
         // API call failed...
         });
-
-        //var cursor = db.collection('sol_details').find();
-        //console.log('cursor' , cursor);
-        /*cursor.forEach(function (doc, err) {
-            if (err) {
-            console.log('err' , err);
-            }
-            console.log('doc' ,doc);
-            resultArray.push(doc);
-
-        }, function () {
-            db.close();
-
-        });*/
     });
 
     },

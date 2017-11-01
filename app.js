@@ -4,15 +4,18 @@ var express = require('express');
 var path = require('path');
 var app = express();
 var SockJS  = require('sockjs');
+var api = require('./routes/api');
+var bodyParser = require('body-parser');
 var dataFile = './data.txt';
 var datas = [];
 var lastDatas = '[]';
-var cornService  = require('./config/cronConfig');
+
 
 // Set static dir
 app.use('/assets', express.static('bower_components'));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 // Check if data file exists, if not exists then create the file
 if(!fs.existsSync(dataFile)) {
     fs.writeFileSync(dataFile, '[]');
@@ -38,7 +41,7 @@ setInterval(function(){
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
-
+app.use('/api/v1', api);
 // Setup SockJS server
 var sockjs = SockJS.createServer({sockjs_url: "http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"});
 var clients = [];
@@ -115,6 +118,22 @@ var server = http.createServer(app);
 sockjs.installHandlers(server, {prefix:'/messages'});
 
 // Start the server
-server.listen(process.env.PORT || 3000, function(){
-    console.log('Express serving on port 3000');
+//server.listen(process.env.PORT || 3000, function(){
+    //console.log('Express serving on port 3000');
+//});
+
+var mongoClient = require('mongodb');
+
+// Initialize connection once
+mongoClient.connect("mongodb://pwcchatbot:pwcchatbot@cluster0-shard-00-00-oelig.mongodb.net:27017,cluster0-shard-00-01-oelig.mongodb.net:27017,cluster0-shard-00-02-oelig.mongodb.net:27017/chatbot?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin", function(err, database) {
+  if(err) throw err;
+
+  db = database;
+  console.log(db);
+   // Start the application after the database connection is ready
+   // Start the server
+	server.listen(process.env.PORT || 3000, function(){
+		console.log('Express serving on port 3000');
+	});
+  var cornService  = require('./config/cronConfig');
 });
