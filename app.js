@@ -52,9 +52,9 @@ sockjs.on('connection', function(conn) {
     console.log('connection opened', clients.length);
 
     // send all data to the client
-    datas.forEach(function(data){
+    /*datas.forEach(function(data){
         conn.write(JSON.stringify(data));
-    });
+    });*/
 
     conn.on('close', function(){
         // remove the connection from the clients array
@@ -69,12 +69,14 @@ sockjs.on('connection', function(conn) {
             username: data.username,
             timestamp: Date.now()
         };
-
+        var writableData = {}; 
+		writableData["connId"] = conn.id;
+		writableData["data"] = newMessage;
         // append new data on datas array
-        datas.push(newMessage);
+        datas.push(writableData);
 
         // send new data to all clients
-        clients.forEach(function(conn){
+        //clients.forEach(function(conn){
             conn.write(JSON.stringify(newMessage));
 			const apiaiApp = require('apiai')("7f15354fd8784fefa82137532014d187");
 
@@ -83,7 +85,7 @@ sockjs.on('connection', function(conn) {
 			 console.log("sender = " + sender);
 			 console.log("text = " + text);
 			  let apiai = apiaiApp.textRequest(text, {
-				sessionId: '1234' // use any arbitrary id
+				sessionId: conn.id // use any arbitrary id
 			  });
 
 			  apiai.on('response', (response) => {
@@ -96,7 +98,11 @@ sockjs.on('connection', function(conn) {
 					username: 'PwC',
 					timestamp: Date.now()
 				};
-              datas.push(newMessage);
+                var writableData = {}; 
+				writableData["connId"] = conn.id;
+				writableData["data"] = newMessage;
+				datas.push(writableData);
+              //datas.push(newMessage);
               conn.write(JSON.stringify(newMessage));
 
 			  });
@@ -107,7 +113,7 @@ sockjs.on('connection', function(conn) {
 
 			  apiai.end();
 
-        });
+        //});
     });
 });
 
@@ -135,5 +141,5 @@ mongoClient.connect("mongodb://pwcchatbot:pwcchatbot@cluster0-shard-00-00-oelig.
 	server.listen(process.env.PORT || 3000, function(){
 		console.log('Express serving on port 3000');
 	});
-  var cornService  = require('./config/cronConfig');
+  //var cornService  = require('./config/cronConfig');
 });

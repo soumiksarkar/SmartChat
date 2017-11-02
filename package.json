@@ -6,9 +6,11 @@
   "dependencies": {
     "apiai": "^4.0.3",
     "body-parser": "^1.12.3",
-    "express": "^4.12.3",
+    "express": "^4.16.2",
     "express-sse": "git://github.com/dpskvn/express-sse.git",
     "mongodb": "^2.2.33",
+    "mongoose": "^4.12.5",
+    "node-cron-job": "^0.2.3",
     "path": "^0.12.7",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
