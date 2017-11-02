@@ -21,25 +21,32 @@ router.post('/solDetails', function(req, res, next) {
 router.post('/getDetails', function(req, res, next){
 	console.log('action from dialogflow',req.body);
 	if(req.body.result.action === 'getSolDetails'){
-		var accountNo = req.body.result.parameters.Account_Number;
-		var amount = req.body.result.parameters.Amount;
+		var accountNo = req.body.result.parameters.Account_Number.toString();
+		var amount = req.body.result.parameters.Amount.toString();
 		var currency = req.body.result.parameters.Currency;
 		
-		var dbReq = {"Amount":200};
+		var dbReq = {"Amount":amount,
+					 "Currency": currency,
+					 "Account Number": accountNo};
 		
 		console.log("database request json ::::",dbReq);
 		
-		db.collection("sol_details").find(dbReq).toArray(function(err, result) {
+		db.collection("sol_details").find(dbReq).toArray(function(err, dbresult) {
 			if(err){
 			  console.log(err);
 			  res.json(err);
 			return;
 		    }
-			var speech = "Details are : amount -";
-			res.json({"speech":"Call database to get the response",
-			  "displayText":"Call database to get the response",
-			  "source":"dialogflow-webhook-demo"});
-		    console.log('result::::::::', result);
+			var speech = "Details are :\n";
+			dbresult.forEach(function(value){
+				speech = speech +" amount - "+value.Amount+",currency - "+value.Currency+",date - "+value["Date of Assignment"];
+				console.log('speech::::::::', "Call database to get the response");
+				res.json({"speech":speech,
+				  "displayText":speech,
+				  "source":"dialogflow-webhook-demo"});
+				
+			});
+			
 		});
 	}
 	//res.status(400).end();

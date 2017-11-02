@@ -78,7 +78,7 @@ sockjs.on('connection', function(conn) {
         // send new data to all clients
         //clients.forEach(function(conn){
             conn.write(JSON.stringify(newMessage));
-			const apiaiApp = require('apiai')("7f15354fd8784fefa82137532014d187");
+			const apiaiApp = require('apiai')("487749ada6a94a38bfd59c7d58f578fd");
 
 			  let sender = conn.id;
 			  let text = data.message;
