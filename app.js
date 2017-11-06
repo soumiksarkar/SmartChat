@@ -39,6 +39,9 @@ setInterval(function(){
 
 // When the user goes to the / route, send view
 app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/views/login.html');
+});
+app.get('/connect', function(req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
 app.use('/api/v1', api);

@@ -189,11 +189,11 @@
         app.controller('FormController', function($scope, $window, socket) {
             $scope.message = '';
 
-            // get username from localStorage or else generate one for me
-            $scope.username = $window.localStorage.getItem('username') || chance.first();
+            // get username from sessionStorage or else generate one for me
+            $scope.username = $window.sessionStorage.getItem('username') || chance.first();
 
-            // save the username into localStorage
-            $window.localStorage.setItem('username', $scope.username);
+            // save the username into sessionStorage
+            $window.sessionStorage.setItem('username', $scope.username);
 
             // create new message
             $scope.create = function() {
