@@ -48,7 +48,7 @@
                                         <p> {{message.username}} </p>
                                     </li> -->
                                     <li>
-                                        <p> {{message.message}}<span class="chat_message_time">{{message.timestamp | amTimeAgo}}</span> </p>
+                                        <p ng-bind-html="message.message"><span class="chat_message_time">{{message.timestamp | amTimeAgo}}</span> </p>
                                     </li>
                                 </ul>
                             </div>
@@ -124,9 +124,10 @@
     <script src="/assets/moment/min/moment.min.js"></script>
     <script src="/assets/angular-moment/angular-moment.min.js"></script>
     <script src="/assets/chance/chance.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-sanitize.js"></script>
     <script>
 
-        var app = angular.module('app', ['angularMoment', 'ng.sockjs']);
+        var app = angular.module('app', ['angularMoment', 'ng.sockjs','ngSanitize']);
 
         // configure SockJS to connect to /messages url
         app.value('ngSockUrl', '/messages');
@@ -138,7 +139,7 @@
             };
         });
 
-            app.directive('scrollToBottom', function($timeout, $window) {
+            app.directive('scrollToBottom', function($timeout, $window,$sce) {
                 return {
                     scope: {
                         scrollToBottom: "="
@@ -159,7 +160,7 @@
             
 
         // ListController to control our list
-        app.controller('ListController', function($scope, socket) {
+        app.controller('ListController', function($scope, socket,$sce) {
 		    $scope.showHide = false;
             $scope.messages = [];
             socket.onOpen(function(){
