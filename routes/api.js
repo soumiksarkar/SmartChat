@@ -61,7 +61,7 @@ router.post('/getDetails', function(req, res, next){
 				allowedDiff = 100;
 			}
 			dbresult.forEach(function(value){
-				if(value.diff = 0) {
+				if(value.diff == 0) {
 					rowCounter++;
 					isExactAmtFound = true;
 					speech = "The amount assigned to your SOL on " + value.doc["Date of Assignment"];
@@ -114,7 +114,7 @@ router.post('/getDetails', function(req, res, next){
 				allowedDiff = 100;
 			}
 			dbresult.forEach(function(value){
-				if(value.diff = 0) {
+				if(value.diff == 0) {
 					rowCounter++;
 					isExactAmtFound = true;
 					speech = "The amount assigned to your SOL on " + value.doc["Date of Assignment"];
