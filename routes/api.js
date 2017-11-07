@@ -20,10 +20,10 @@ router.post('/solDetails', function(req, res, next) {
 /* details */
 router.post('/getDetails', function(req, res, next){
 	console.log('action from dialogflow',req.body);
-	var errMsg = {"speech":"error occurred",
+	var errMsg = {"speech":"Looks like there is some issue fetching detailed information",
 				  "displayText": "Looks like there is some issue fetching detailed information",
 				  "source":"dialogflow-webhook-demo"};
-	var noRecordMsg = {"speech":"No record found",
+	var noRecordMsg = {"speech":"No record found with given details.",
 				  "displayText": "No record found with given details. Please try again",
 				  "source":"dialogflow-webhook-demo"};
 				  
@@ -44,7 +44,7 @@ router.post('/getDetails', function(req, res, next){
 			{$match: {"Account Number": accountNo, "Currency": currency}},
 			{$project: {diff: {$abs: {$subtract: [amount, '$Amount']}}, doc: '$$ROOT'}},
 			{$sort: {diff: 1}},
-			{$limit: 2}
+			{$limit: 3}
 		]).toArray(function(err, dbresult) {
 			if(err){
 			  console.log(err);
@@ -52,26 +52,93 @@ router.post('/getDetails', function(req, res, next){
 			  return;
 		    }
 			console.log("dbResult:::",dbresult);
-			var speech = "Details are :";
+			var speechHeader = "The amounts closest to this figure were assigned to your SOL as below";
+			var speech = "";
 			var isExactAmtFound = false;
 			var rowCounter = 0;
+			var allowedDiff = amount * 0.1;
+			if(allowedDiff<100) {
+				allowedDiff = 100;
+			}
 			dbresult.forEach(function(value){
-				if(!isExactAmtFound) {
-					speech = speech + "<br> Amount - " + value.doc.Amount + ", Currency - " + value.doc.Currency + ", Date - " + value.doc["Date of Assignment"];
-					console.log('speech::::::::', speech);
-					res.json({"speech":speech,
-					  "displayText":speech,
-					  "source":"dialogflow-webhook-demo"});
-				}
-				if(value.diff == 0){
+				if(value.diff = 0) {
+					rowCounter++;
 					isExactAmtFound = true;
+					speech = "The amount assigned to your SOL on " + value.doc["Date of Assignment"];
+				} else if(!isExactAmtFound && value.diff < allowedDiff) {
+					rowCounter++;
+					speech = speech + "<br>" +  value.doc.Amount + " assigned to your SOL on " + value.doc["Date of Assignment"];
+				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
+					speech = "No transaction found with the amount you provided";
 				}
-				rowCounter++;
+				
+				if(!isExactAmtFound && rowCounter>0) {
+					res.json({"speech":speechHeader + speech,
+						  "displayText":speechHeader + speech,
+						  "source":"dialogflow-webhook-demo"});
+				} else {
+					res.json({"speech":speech,
+						  "displayText":speech,
+						  "source":"dialogflow-webhook-demo"});
+				}
+				
 			});
 			if(rowCounter==0) {
 				res.json(noRecordMsg);
 			}
-			
+		});
+	} else if(req.body.result.action === 'fund_details_sol_id_based'){
+		//Get fund details based on SOL ID
+		console.log("inside fund_details_sol_id_based");
+		console.log("solId:::", solId);
+		console.log("accNo:::", accountNo);
+		console.log("currency:::", currency);
+		db.collection('sol_details').aggregate([
+			{$match: {"SOL ID": solId}},
+			{$project: {diff: {$abs: {$subtract: [amount, '$Amount']}}, doc: '$$ROOT'}},
+			{$sort: {diff: 1}},
+			{$limit: 3}
+		]).toArray(function(err, dbresult) {
+			if(err){
+			  console.log(err);
+			  res.json(errMsg);
+			  return;
+		    }
+			console.log("dbResult:::",dbresult);
+			var speechHeader = "The amounts closest to this figure were assigned to your branch as below";
+			var speech = "";
+			var isExactAmtFound = false;
+			var rowCounter = 0;
+			var allowedDiff = amount * 0.1;
+			if(allowedDiff<100) {
+				allowedDiff = 100;
+			}
+			dbresult.forEach(function(value){
+				if(value.diff = 0) {
+					rowCounter++;
+					isExactAmtFound = true;
+					speech = "The amount assigned to your SOL on " + value.doc["Date of Assignment"];
+				} else if(!isExactAmtFound && value.diff < allowedDiff) {
+					rowCounter++;
+					speech = speech + "<br>" +  value.doc.Amount + " assigned to your branch on " + value.doc["Date of Assignment"];
+				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
+					speech = "No transaction found with the amount you provided";
+				}
+				
+				if(!isExactAmtFound && rowCounter>0) {
+					res.json({"speech":speechHeader + speech,
+						  "displayText":speechHeader + speech,
+						  "source":"dialogflow-webhook-demo"});
+				} else {
+					res.json({"speech":speech,
+						  "displayText":speech,
+						  "source":"dialogflow-webhook-demo"});
+				}
+				
+			});
+			if(rowCounter==0) {
+				res.json(noRecordMsg);
+			}
 		});
 	} else if(req.body.result.action === 'fund_details_account_based'){
 		//Get All fund details based on account number
@@ -100,40 +167,6 @@ router.post('/getDetails', function(req, res, next){
 			});
 		});
 		
-	} else if(req.body.result.action === 'fund_details_sol_id_based'){
-		//Get fund details based on SOL ID
-		db.collection('sol_details').aggregate([
-			{$match: {"SOL ID": solId}},
-			{$project: {diff: {$abs: {$subtract: [amount, '$Amount']}}, doc: '$$ROOT'}},
-			{$sort: {diff: 1}},
-			{$limit: 2}
-		]).toArray(function(err, dbresult) {
-			if(err){
-			  console.log(err);
-			  res.json(errMsg);
-			  return;
-		    }
-			var speech = "Details are :";
-			var isExactAmtFound = false;
-			var rowCounter = 0;
-			dbresult.forEach(function(value){
-				if(!isExactAmtFound) {
-					speech = speech + "<br> Amount - " + value.doc.Amount + ", Currency - " + value.doc.Currency + ", Date - " + value.doc["Date of Assignment"];
-					console.log('speech::::::::', speech);
-					res.json({"speech":speech,
-					  "displayText":speech,
-					  "source":"dialogflow-webhook-demo"});
-				}
-				if(value.diff == 0){
-					isExactAmtFound = true;
-				}
-				rowCounter++;
-			});
-			if(rowCounter==0) {
-				res.json(noRecordMsg);
-			}
-			
-		});
 	} else if(req.body.result.action === 'fund_details_date_based'){
 		//Get fund details based on from and to date
 		//TODO: Form the query with from date and to date
