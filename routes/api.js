@@ -27,15 +27,19 @@ router.post('/getDetails', function(req, res, next){
 				  "displayText": "No record found with given details. Please try again",
 				  "source":"dialogflow-webhook-demo"};
 				  
-	var accountNo = req.body.result.parameters.AccountNo;
-	var amount = req.body.result.parameters.Amount;
+	var accountNo = parseInt(req.body.result.parameters.AccountNo);
+	var amount = parseFloat(req.body.result.parameters.Amount);
 	var currency = req.body.result.parameters.Currency;
 	var transactionDate = req.body.result.parameters.TransactionDate;
 	var dateFrom = req.body.result.parameters.FromDate;
 	var dateTo = req.body.result.parameters.ToDate;
-	var solId = req.body.result.parameters.SolID;
+	var solId = parseInt(req.body.result.parameters.SolID);
 	
-	if(req.body.result.action === 'fund_details_amount_based'){		
+	if(req.body.result.action === 'fund_details_amount_based'){	
+		
+		console.log("inside fund_details_amount_based");
+		console.log("accNo:::", accountNo);
+		console.log("currency:::", currency);
 		db.collection('sol_details').aggregate([
 			{$match: {"Account Number": accountNo, "Currency": currency}},
 			{$project: {diff: {$abs: {$subtract: [amount, '$Amount']}}, doc: '$$ROOT'}},
@@ -47,6 +51,7 @@ router.post('/getDetails', function(req, res, next){
 			  res.json(errMsg);
 			  return;
 		    }
+			console.log("dbResult:::",dbresult);
 			var speech = "Details are :";
 			var isExactAmtFound = false;
 			var rowCounter = 0;
