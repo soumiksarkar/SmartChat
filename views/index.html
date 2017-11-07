@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="./styles/style.css">
 </head>
 <body ng-controller="ListController">
-
+<!--
 
 <div class="container text-center">
     <div class="row">
@@ -17,13 +17,14 @@
     
 	</div>
 </div>
+-->
 
 
 <aside id="sidebar_secondary" class="tabbed_sidebar ng-scope chat_sidebar" ng-show="showHide">
 
 <div class="popup-head">
-    			<div class="popup-head-left pull-left"><a Design and Developmenta title="Gurdeep Osahan (Web Designer)" target="_blank" href="https://web.facebook.com/iamgurdeeposahan">
-<img class="md-user-image" alt="Gurdeep Osahan (Web Designer)" title="Gurdeep Osahan (Web Designer)" src="https://www.zikelcosmetics.com/wp-content/uploads/2016/07/17083-Female-Avatar-ORG.jpg" title="Gurdeep Osahan (Web Designer)" alt="Gurdeep Osahan (Web Designer)">
+    			<div class="popup-head-left pull-left"><a  title=""  href="">
+<img class="md-user-image" alt="Chatbot" title="Chatbot"  src="https://pbs.twimg.com/profile_images/812461756681330689/UUK_frQl.jpg">
 <h1>PAS <small><br> <span class="glyphicon" aria-hidden="true"></span> online</small></h1></a></div>
 					  <div class="popup-head-right pull-right">	
 						<button ng-click="closeChatWindow();" data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
@@ -37,7 +38,7 @@
                             <div class="chat_message_wrapper" ng-class="message.username!='PwC'? 'chat_message_right' : ''">
                                 <div class="chat_user_avatar">
                                     <a href="https://web.facebook.com/iamgurdeeposahan" target="_blank" >
-                                    <img alt="Gurdeep Osahan (Web Designer)"  ng-if="message.username==='PwC'" title="Gurdeep Osahan (Web Designer)"  src="https://www.zikelcosmetics.com/wp-content/uploads/2016/07/17083-Female-Avatar-ORG.jpg" class="md-user-image">
+                                    <img alt=""  ng-if="message.username==='PwC'" title=""  src="https://pbs.twimg.com/profile_images/812461756681330689/UUK_frQl.jpg" class="md-user-image">
                                     
                                     <img alt="Gurdeep Osahan (Web Designer)" ng-if="message.username!='PwC'" title="Gurdeep Osahan (Web Designer)"  src="http://www.eniweb.com/wp-content/uploads/2017/05/me-icon.png" class="md-user-image">
                                     
@@ -161,7 +162,7 @@
 
         // ListController to control our list
         app.controller('ListController', function($scope, socket,$sce) {
-		    $scope.showHide = false;
+		    $scope.showHide = true;
             $scope.messages = [];
             socket.onOpen(function(){
 
