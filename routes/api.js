@@ -23,9 +23,6 @@ router.post('/getDetails', function(req, res, next){
 	var errMsg = {"speech":"Looks like there is some issue fetching detailed information",
 				  "displayText": "Looks like there is some issue fetching detailed information",
 				  "source":"dialogflow-webhook-demo"};
-	var noRecordMsg = {"speech":"No record found with given details.",
-				  "displayText": "No record found with given details. Please try again",
-				  "source":"dialogflow-webhook-demo"};
 				  
 	var accountNo = parseInt(req.body.result.parameters.AccountNo);
 	var amount = parseFloat(req.body.result.parameters.Amount);
@@ -85,9 +82,6 @@ router.post('/getDetails', function(req, res, next){
 				}
 				
 			});
-			if(rowCounter==0) {
-				res.json(noRecordMsg);
-			}
 		});
 	} else if(req.body.result.action === 'fund_details_sol_id_based'){
 		//Get fund details based on SOL ID
@@ -139,9 +133,6 @@ router.post('/getDetails', function(req, res, next){
 				}
 				
 			});
-			if(rowCounter==0) {
-				res.json(noRecordMsg);
-			}
 		});
 	} else if(req.body.result.action === 'fund_details_account_based'){
 		//Get All fund details based on account number
