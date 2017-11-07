@@ -71,6 +71,7 @@ router.post('/getDetails', function(req, res, next){
 				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
 					speech = "No transaction found with the amount you provided";
 				}
+				console.log("speech:::",speech);
 				
 				if(!isExactAmtFound && rowCounter>0) {
 					res.json({"speech":speechHeader + speech,
@@ -124,6 +125,7 @@ router.post('/getDetails', function(req, res, next){
 				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
 					speech = "No transaction found with the amount you provided";
 				}
+				console.log("speech:::",speech);
 				
 				if(!isExactAmtFound && rowCounter>0) {
 					res.json({"speech":speechHeader + speech,
