@@ -114,10 +114,10 @@ router.post('/getDetails', function(req, res, next){
 				if(value.diff == 0) {
 					rowCounter++;
 					isExactAmtFound = true;
-					speech = "The amount assigned to your SOL on " + value.doc["Date of Assignment"];
+					speech = "The amount assigned to your SOL on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
 				} else if(!isExactAmtFound && value.diff < allowedDiff) {
 					rowCounter++;
-					speech = speech + "<br>" +  value.doc.Amount + " assigned to your branch on " + value.doc["Date of Assignment"];
+					speech = speech + "<br>" +  value.doc.Amount + " assigned to your branch on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
 				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
 					speech = "No transaction found with the amount you provided";
 				}
