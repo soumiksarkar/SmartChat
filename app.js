@@ -41,7 +41,7 @@ setInterval(function(){
 /*app.get('/', function(req, res) {
     res.sendFile(__dirname + '/views/login.html');
 });
-*/
+
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });*/
