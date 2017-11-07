@@ -70,6 +70,7 @@ router.post('/getDetails', function(req, res, next){
 					speech = speech + "<br>" +  value.doc.Amount + " assigned to your SOL on " + value.doc["Date of Assignment"];
 				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
 					speech = "No transaction found with the amount you provided";
+					console.log("Condition satisfied");
 				}
 				console.log("speech:::",speech);
 				
