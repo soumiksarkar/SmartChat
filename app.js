@@ -38,12 +38,17 @@ setInterval(function(){
 
 
 // When the user goes to the / route, send view
-app.get('/', function(req, res) {
+/*app.get('/', function(req, res) {
     res.sendFile(__dirname + '/views/login.html');
 });
 app.get('/connect', function(req, res) {
     res.sendFile(__dirname + '/views/index.html');
+});*/
+
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/views/index.html');
 });
+
 app.use('/api/v1', api);
 // Setup SockJS server
 var sockjs = SockJS.createServer({sockjs_url: "http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"});
