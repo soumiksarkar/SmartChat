@@ -49,7 +49,7 @@ router.post('/getDetails', function(req, res, next){
 			  res.json(errMsg);
 			  return;
 		    }
-			console.log("dbResult:::",dbresult);
+			console.log("dbResult",dbresult);
 			var speechHeader = "The amounts closest to this figure were assigned to your SOL as below";
 			var speech = "";
 			var isExactAmtFound = false;
