@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var dateFormat = require('dateformat');
 
 /* GET users listing. */
 router.post('/solDetails', function(req, res, next) {
@@ -22,9 +23,6 @@ router.post('/getDetails', function(req, res, next){
 	console.log('action from dialogflow',req.body);
 	var errMsg = {"speech":"Looks like there is some issue fetching detailed information",
 				  "displayText": "Looks like there is some issue fetching detailed information",
-				  "source":"dialogflow-webhook-demo"};
-	var noRecordMsg = {"speech":"No record found with given details.",
-				  "displayText": "No record found with given details. Please try again",
 				  "source":"dialogflow-webhook-demo"};
 				  
 	var accountNo = parseInt(req.body.result.parameters.AccountNo);
@@ -64,12 +62,13 @@ router.post('/getDetails', function(req, res, next){
 				if(value.diff == 0) {
 					rowCounter++;
 					isExactAmtFound = true;
-					speech = "The amount assigned to your SOL on " + value.doc["Date of Assignment"];
+					speech = "The amount assigned to your SOL on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
 				} else if(!isExactAmtFound && value.diff < allowedDiff) {
 					rowCounter++;
-					speech = speech + "<br>" +  value.doc.Amount + " assigned to your SOL on " + value.doc["Date of Assignment"];
+					speech = speech + "<br>" +  value.doc.Amount + " assigned to your SOL on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
 				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
 					speech = "No transaction found with the amount you provided";
+					console.log("Condition satisfied");
 				}
 				console.log("speech:::",speech);
 				
@@ -84,9 +83,6 @@ router.post('/getDetails', function(req, res, next){
 				}
 				
 			});
-			if(rowCounter==0) {
-				res.json(noRecordMsg);
-			}
 		});
 	} else if(req.body.result.action === 'fund_details_sol_id_based'){
 		//Get fund details based on SOL ID
@@ -118,10 +114,10 @@ router.post('/getDetails', function(req, res, next){
 				if(value.diff == 0) {
 					rowCounter++;
 					isExactAmtFound = true;
-					speech = "The amount assigned to your SOL on " + value.doc["Date of Assignment"];
+					speech = "The amount assigned to your SOL on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
 				} else if(!isExactAmtFound && value.diff < allowedDiff) {
 					rowCounter++;
-					speech = speech + "<br>" +  value.doc.Amount + " assigned to your branch on " + value.doc["Date of Assignment"];
+					speech = speech + "<br>" +  value.doc.Amount + " assigned to your branch on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
 				} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
 					speech = "No transaction found with the amount you provided";
 				}
@@ -138,9 +134,6 @@ router.post('/getDetails', function(req, res, next){
 				}
 				
 			});
-			if(rowCounter==0) {
-				res.json(noRecordMsg);
-			}
 		});
 	} else if(req.body.result.action === 'fund_details_account_based'){
 		//Get All fund details based on account number
