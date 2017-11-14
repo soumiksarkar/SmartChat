@@ -47,6 +47,9 @@ app.get('/', function(req, res) {
 });*/
 
 app.get('/', function(req, res) {
+	if(req.query.publicKey)
+	publicKey = req.query.publicKey;
+
     res.sendFile(__dirname + '/views/index.html');
 });
 
@@ -87,7 +90,7 @@ sockjs.on('connection', function(conn) {
         // send new data to all clients
         //clients.forEach(function(conn){
             conn.write(JSON.stringify(newMessage));
-			const apiaiApp = require('apiai')("487749ada6a94a38bfd59c7d58f578fd");
+			const apiaiApp = require('apiai')(publicKey);
 
 			  let sender = conn.id;
 			  let text = data.message;
