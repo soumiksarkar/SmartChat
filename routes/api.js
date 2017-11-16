@@ -33,7 +33,7 @@ router.post('/getDetails', function(req, res, next){
 	var dateTo = req.body.result.parameters.ToDate;
 	var solId = parseInt(req.body.result.parameters.SolID);
 	
-	if(req.body.result.action === 'fund_details_amount_based'){	
+	if(req.body.result.action === 'fund_details_amount_based'){
 		
 		console.log("inside fund_details_amount_based");
 		console.log("accNo:::", accountNo);
@@ -167,6 +167,35 @@ router.post('/getDetails', function(req, res, next){
 						  "source":"dialogflow-webhook-demo"});
 			}
 		});
+	} else if(req.body.result.action === 'total_fund_sol_id'){
+		
+		console.log("inside total_fund_sol_id");
+		console.log("solId:::", solId);
+		
+		db.collection('sol_details').find({"SOL ID": solId}).toArray(function(err, response) {
+		   if(response.length){
+				if(err){
+				  console.log(err);
+				  res.json(errMsg);
+				  return;
+				}
+				console.log("dbResult",response);
+				var speechHeader = "The total funds in your SOL ID is as follows :-<br>";
+				var speech = "";
+				response.forEach(function(value){
+					speech = speech + "<br>" +  value.Amount + " " + value.Currency;
+				});
+				res.json({"speech":speechHeader + speech,
+						  "displayText":speechHeader + speech,
+						  "source":"dialogflow-webhook-demo"});
+		   } else {
+				res.json({"speech":"Provided sol id is not valid",
+						  "displayText":"Provided sol id is not valid",
+						  "source":"dialogflow-webhook-demo"});
+		   }
+		});
+		
+		
 	}
 		
 		
