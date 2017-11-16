@@ -49,8 +49,13 @@ app.get('/', function(req, res) {
 app.get('/', function(req, res) {
 	if(req.query.publicKey)
 	publicKey = req.query.publicKey;
+	else
+	publicKey = '';
 
-    res.sendFile(__dirname + '/views/index.html');
+	if(publicKey)
+     res.sendFile(__dirname + '/views/index.html');
+	else
+     res.status(500).end("Invalid key");	
 });
 
 app.use('/api/v1', api);
@@ -120,7 +125,15 @@ sockjs.on('connection', function(conn) {
 			  });
 
 			  apiai.on('error', (error) => {
-				console.log(error);
+				console.log('error::::::::::::::::::::::',error);
+				var parseJson = JSON.parse(error.responseBody);
+				console.log(parseJson);
+				var errMsg = {
+					message: parseJson.status.errorDetails,
+					username: 'PwC',
+					timestamp: Date.now()
+				};				
+				conn.write(JSON.stringify(errMsg));
 			  });
 
 			  apiai.end();
