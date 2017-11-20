@@ -171,6 +171,7 @@ router.post('/getDetails', function(req, res, next){
 		
 		console.log("inside total_fund_sol_id");
 		console.log("solId:::", solId);
+		console.log("test log");
 		
 		db.collection('sol_details').find({"SOL ID": solId}).toArray(function(err, response) {
 		   if(response.length){
@@ -202,4 +203,6 @@ router.post('/getDetails', function(req, res, next){
 	//res.status(400).end();
 	
 });
+
+
 module.exports = router;
