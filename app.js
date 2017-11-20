@@ -55,15 +55,16 @@ app.get('/', function(req, res) {
 	if(publicKey)
      res.sendFile(__dirname + '/views/index.html');
 	else
-     res.status(500).end("Invalid key");	
+     res.status(500).end("Invalid key");
 });
 
 app.use('/api/v1', api);
 // Setup SockJS server
 var sockjs = SockJS.createServer({sockjs_url: "http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"});
 var clients = [];
+var agentKey = [];
 sockjs.on('connection', function(conn) {
-
+    agentKey[conn] = publicKey;
     // add connection to clients array
     clients.push(conn);
     console.log('connection opened', clients.length);
@@ -86,7 +87,7 @@ sockjs.on('connection', function(conn) {
             username: data.username,
             timestamp: Date.now()
         };
-        var writableData = {}; 
+        var writableData = {};
 		writableData["connId"] = conn.id;
 		writableData["data"] = newMessage;
         // append new data on datas array
@@ -95,7 +96,7 @@ sockjs.on('connection', function(conn) {
         // send new data to all clients
         //clients.forEach(function(conn){
             conn.write(JSON.stringify(newMessage));
-			const apiaiApp = require('apiai')(publicKey);
+			const apiaiApp = require('apiai')(agentKey[conn]);
 
 			  let sender = conn.id;
 			  let text = data.message;
@@ -115,7 +116,7 @@ sockjs.on('connection', function(conn) {
 					username: 'PwC',
 					timestamp: Date.now()
 				};
-                var writableData = {}; 
+                var writableData = {};
 				writableData["connId"] = conn.id;
 				writableData["data"] = newMessage;
 				datas.push(writableData);
@@ -132,7 +133,7 @@ sockjs.on('connection', function(conn) {
 					message: parseJson.status.errorDetails,
 					username: 'PwC',
 					timestamp: Date.now()
-				};				
+				};
 				conn.write(JSON.stringify(errMsg));
 			  });
 
