@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var dataFile = './data.txt';
 var datas = [];
 var lastDatas = '[]';
-
+var publicKey;
 
 // Set static dir
 app.use('/assets', express.static('bower_components'));
