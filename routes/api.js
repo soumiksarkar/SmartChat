@@ -63,7 +63,7 @@ router.post('/getDetails', function(req, res, next){
 					}
 					isRowFound = false;
 					dbresult.forEach(function(value){
-            isRowFound = true;
+						isRowFound = true;
 						if(value.diff == 0) {
 							rowCounter++;
 							isExactAmtFound = true;
@@ -71,14 +71,18 @@ router.post('/getDetails', function(req, res, next){
 						} else if(!isExactAmtFound && value.diff < allowedDiff) {
 							rowCounter++;
 							speech = speech + "<br>" +  value.doc.Amount + " assigned to your SOL on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
-						} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
+						} else if(!isExactAmtFound && value.diff >= allowedDiff && rowCounter==0){
 							speech = "No transaction found with the amount you provided";
 							console.log("Condition satisfied");
 						}
-            });
+					});
 						console.log("speech inside amount based:::",speech);
 
-						if(!isExactAmtFound && rowCounter>0) {
+						if(!isRowFound) {
+							res.json({"speech":"No details found with the information you provided",
+									  "displayText":"No details found with the information you provided",
+									  "source":"dialogflow-webhook-demo"});
+						} else if(!isExactAmtFound && rowCounter>0) {
 							res.json({"speech":speechHeader + speech,
 								  "displayText":speechHeader + speech,
 								  "source":"dialogflow-webhook-demo"});
@@ -87,17 +91,13 @@ router.post('/getDetails', function(req, res, next){
 							res.json({"speech":speech,
 								  "displayText":speech,
 								  "source":"dialogflow-webhook-demo"});
-              console.log('res josn set');
+							console.log('res josn set');
 
 						}
 						//isRowFound = true;
             //return res.send();
 					//});
-					if(!isRowFound) {
-						res.json({"speech":"No details found with the information you provided",
-								  "displayText":"No details found with the information you provided",
-								  "source":"dialogflow-webhook-demo"});
-					}
+					
 				});
 		   } else {
 				res.json({"speech":"Provided account number is not valid",
@@ -145,7 +145,7 @@ router.post('/getDetails', function(req, res, next){
 						} else if(!isExactAmtFound && value.diff < allowedDiff) {
 							rowCounter++;
 							speech = speech + "<br>" +  value.doc.Amount + " assigned to your branch on " + dateFormat(value.doc["Date of Assignment"],"dd-mmm-yy");
-						} else if(!isExactAmtFound && value.diff > allowedDiff && rowCounter==0){
+						} else if(!isExactAmtFound && value.diff >= allowedDiff && rowCounter==0){
 							speech = "No transaction found with the amount you provided";
 						}
 						console.log("speech:::",speech);
