@@ -24,7 +24,7 @@ router.post('/getDetails', function(req, res, next){
 	var errMsg = {"speech":"Looks like there is some issue fetching detailed information",
 				  "displayText": "Looks like there is some issue fetching detailed information",
 				  "source":"dialogflow-webhook-demo"};
-				  
+
 	var accountNo = parseInt(req.body.result.parameters.AccountNo);
 	var amount = parseFloat(req.body.result.parameters.Amount);
 	var currency = req.body.result.parameters.Currency;
@@ -32,13 +32,13 @@ router.post('/getDetails', function(req, res, next){
 	var dateFrom = req.body.result.parameters.FromDate;
 	var dateTo = req.body.result.parameters.ToDate;
 	var solId = parseInt(req.body.result.parameters.SolID);
-	
+
 	if(req.body.result.action === 'fund_details_amount_based'){
-		
+
 		console.log("inside fund_details_amount_based");
 		console.log("accNo:::", accountNo);
 		console.log("currency:::", currency);
-		
+
 		db.collection('sol_details').find({"Account Number": accountNo}).toArray(function(err, response) {
 		   if(response.length){
 				db.collection('sol_details').aggregate([
@@ -49,10 +49,10 @@ router.post('/getDetails', function(req, res, next){
 				]).toArray(function(err, dbresult) {
 					if(err){
 					  console.log(err);
-					  res.json(errMsg);
-					  return;
+            res.json(errMsg);
+            return res.send();
 					}
-					console.log("dbResult",dbresult);
+					//console.log("dbResult",dbresult);
 					var speechHeader = "The amounts closest to this figure were assigned to your SOL as below";
 					var speech = "";
 					var isExactAmtFound = false;
@@ -63,6 +63,7 @@ router.post('/getDetails', function(req, res, next){
 					}
 					isRowFound = false;
 					dbresult.forEach(function(value){
+            isRowFound = true;
 						if(value.diff == 0) {
 							rowCounter++;
 							isExactAmtFound = true;
@@ -74,19 +75,24 @@ router.post('/getDetails', function(req, res, next){
 							speech = "No transaction found with the amount you provided";
 							console.log("Condition satisfied");
 						}
-						console.log("speech:::",speech);
-						
+            });
+						console.log("speech inside amount based:::",speech);
+
 						if(!isExactAmtFound && rowCounter>0) {
 							res.json({"speech":speechHeader + speech,
 								  "displayText":speechHeader + speech,
 								  "source":"dialogflow-webhook-demo"});
+
 						} else {
 							res.json({"speech":speech,
 								  "displayText":speech,
 								  "source":"dialogflow-webhook-demo"});
+              console.log('res josn set');
+
 						}
-						isRowFound = true;
-					});
+						//isRowFound = true;
+            //return res.send();
+					//});
 					if(!isRowFound) {
 						res.json({"speech":"No details found with the information you provided",
 								  "displayText":"No details found with the information you provided",
@@ -99,15 +105,15 @@ router.post('/getDetails', function(req, res, next){
 						  "source":"dialogflow-webhook-demo"});
 		   }
 		});
-		
-		
+
+
 	} else if(req.body.result.action === 'fund_details_sol_id_based'){
 		//Get fund details based on SOL ID
 		console.log("inside fund_details_sol_id_based");
 		console.log("solId:::", solId);
 		console.log("accNo:::", accountNo);
 		console.log("currency:::", currency);
-		
+
 		db.collection('sol_details').find({"SOL ID" : solId}).toArray(function(err, response) {
 			if(response.length){
 				db.collection('sol_details').aggregate([
@@ -143,7 +149,7 @@ router.post('/getDetails', function(req, res, next){
 							speech = "No transaction found with the amount you provided";
 						}
 						console.log("speech:::",speech);
-						
+
 						if(!isExactAmtFound && rowCounter>0) {
 							res.json({"speech":speechHeader + speech,
 								  "displayText":speechHeader + speech,
@@ -168,17 +174,17 @@ router.post('/getDetails', function(req, res, next){
 			}
 		});
 	} else if(req.body.result.action === 'total_fund_sol_id'){
-		
+
 		console.log("inside total_fund_sol_id");
 		console.log("solId:::", solId);
 		console.log("test log");
-		
+
 		db.collection('sol_details').find({"SOL ID": solId}).toArray(function(err, response) {
 		   if(response.length){
 				if(err){
 				  console.log(err);
 				  res.json(errMsg);
-				  return;
+          return res.send();
 				}
 				console.log("dbResult",response);
 				var speechHeader = "The total funds in your SOL ID is as follows :-<br>";
@@ -195,13 +201,13 @@ router.post('/getDetails', function(req, res, next){
 						  "source":"dialogflow-webhook-demo"});
 		   }
 		});
-		
-		
+
+
 	}
-		
-		
-	//res.status(400).end();
-	
+
+  res.setHeader("Content-Type", "application/json");
+	//res.status(200).end();
+
 });
 
 
